@@ -1,9 +1,7 @@
 package com.saraev.netty.chat.client;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -18,7 +16,7 @@ public class Network {
     private static final int PORT = 8189;
 
     public Network() {
-        log.info("Подключение к серверу...");
+        log.debug("Подключение к серверу...");
         new Thread(() -> {
             EventLoopGroup workerGroup = new NioEventLoopGroup();
             try {
@@ -27,20 +25,26 @@ public class Network {
                         .channel(NioSocketChannel.class)
                         .handler(new ChannelInitializer<SocketChannel>() {
                             @Override
-                            protected void initChannel(SocketChannel socketChannel) throws Exception {
+                            protected void initChannel(SocketChannel socketChannel) {
                                 channel = socketChannel;
-                                socketChannel.pipeline().addLast(new StringDecoder(), new StringEncoder());
+                                socketChannel.pipeline().addLast(new StringDecoder(),
+                                        new StringEncoder(),
+                                        new SimpleChannelInboundHandler<String>() {
+                                            @Override
+                                            protected void channelRead0(ChannelHandlerContext channelHandlerContext, String s) {
+                                                log.debug("Get from server: " + s);
+                                            }
+                                        });
                             }
                         });
                 ChannelFuture future = b.connect(HOST, PORT).sync();
                 future.channel().closeFuture().sync();
             } catch (InterruptedException ex) {
-                log.info("Ошибка подключения к серверу...");
+                log.debug("Ошибка подключения к серверу...");
             } finally {
-                log.info("Отключение...");
+                log.debug("Отключение...");
                 workerGroup.shutdownGracefully();
             }
-
         }).start();
     }
 
