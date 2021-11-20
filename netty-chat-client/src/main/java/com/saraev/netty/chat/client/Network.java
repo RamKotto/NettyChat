@@ -43,7 +43,6 @@ public class Network {
                 workerGroup.shutdownGracefully();
             }
         });
-        tNetwork.setDaemon(true);
         tNetwork.start();
     }
 

@@ -19,4 +19,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
             onMessageReceivedCallback.callback(s);
         }
     }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        ctx.close();
+        cause.printStackTrace();
+    }
 }
