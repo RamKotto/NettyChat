@@ -1,6 +1,6 @@
 # NettyChat
 
-<h3>Instruction:<h3>
+<h3>Instruction:<.h3>
   <p>-Run server</p>
  <p>-Run client (as much as you need)</p>
 
