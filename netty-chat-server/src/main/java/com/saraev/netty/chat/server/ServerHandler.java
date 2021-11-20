@@ -22,7 +22,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         channels.add(ctx.channel());
         clientName = "Client #" + newClientIndex;
         newClientIndex++;
-        broadcastMessage("[SERVER]", "New client connected: " + clientName);
+        broadcastMessage("SERVER", "New client connected: " + clientName);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         if (s.startsWith("/")) {
             if (s.startsWith("/changename ")) {
                 String newName = s.split("\\s", 2)[1];
-                broadcastMessage("[SERVER]", clientName + " change name to " + newName);
+                broadcastMessage("SERVER", clientName + " change name to " + newName);
                 clientName = newName;
             }
                 return;
@@ -51,7 +51,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.debug(cause.getMessage());
         channels.remove(ctx.channel());
-        broadcastMessage("[SERVER]", "Client " + clientName + " leave the chat.");
+        broadcastMessage("SERVER", "Client " + clientName + " leave the chat.");
         ctx.close();
     }
 }
