@@ -7,7 +7,16 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
 <VBox fx:controller="com.saraev.netty.chat.client.Controller" xmlns:fx="http://javafx.com/fxml">
+
+    <MenuBar>
+        <Menu text="program">
+            <MenuItem text="quit" onAction="#exitAction"/>
+        </Menu>
+    </MenuBar>
     <TextArea fx:id="mainArea" editable="false" VBox.vgrow="ALWAYS"/>
     <HBox>
         <TextField fx:id="msgField" HBox.hgrow="ALWAYS" promptText="Enter your message..." onAction="#sendMsgAction"/>

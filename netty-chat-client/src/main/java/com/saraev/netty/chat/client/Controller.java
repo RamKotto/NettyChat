@@ -1,5 +1,6 @@
 package com.saraev.netty.chat.client;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,5 +30,10 @@ public class Controller implements Initializable {
         network.sendMsg(msgField.getText());
         msgField.clear();
         msgField.requestFocus();
+    }
+
+    public void exitAction(ActionEvent actionEvent) {
+        network.close();
+        Platform.exit();
     }
 }

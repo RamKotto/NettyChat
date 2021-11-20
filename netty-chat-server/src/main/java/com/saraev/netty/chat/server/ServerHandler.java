@@ -8,7 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.saraev.netty.chat.server.utils.ClientMessageUtils.createOutputString;
+import static com.saraev.netty.chat.server.utils.StringUtils.changeName;
+import static com.saraev.netty.chat.server.utils.StringUtils.createOutputMessage;
 
 @Slf4j
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
@@ -27,12 +28,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
-        String out = createOutputString(clientName, s);
+        String out = createOutputMessage(clientName, s);
         log.debug("Received message: " + out);
         if (s.startsWith("/")) {
             if (s.startsWith("/changename ")) {
-                String newName = s.split("\\s", 2)[1];
-                broadcastMessage("SERVER", clientName + " change name to " + newName);
+                String newName = changeName(s);
+                broadcastMessage("SERVER", clientName + " changed name to " + newName);
                 clientName = newName;
             }
                 return;
@@ -41,7 +42,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     }
 
     public void broadcastMessage(String clientName, String message) {
-        String out = createOutputString(clientName, message);
+        String out = createOutputMessage(clientName, message);
         for (Channel channel : channels) {
             channel.writeAndFlush(out);
         }
@@ -51,7 +52,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.debug(cause.getMessage());
         channels.remove(ctx.channel());
-        broadcastMessage("SERVER", clientName + " leave the chat.");
+        broadcastMessage("SERVER", clientName + " left the chat.");
         ctx.close();
     }
 }

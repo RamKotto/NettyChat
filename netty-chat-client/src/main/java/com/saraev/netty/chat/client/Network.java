@@ -50,4 +50,8 @@ public class Network {
     public void sendMsg(String msg) {
         channel.writeAndFlush(msg);
     }
+
+    public void close() {
+        channel.close();
+    }
 }
