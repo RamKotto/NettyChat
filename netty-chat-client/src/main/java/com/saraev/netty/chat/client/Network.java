@@ -19,7 +19,7 @@ public class Network {
     public Network(Callback onMessageReceivedCallback) {
         this.onMessageReceivedCallback = onMessageReceivedCallback;
         log.debug("Подключение к серверу...");
-        new Thread(() -> {
+        Thread tNetwork = new Thread(() -> {
             EventLoopGroup workerGroup = new NioEventLoopGroup();
             try {
                 Bootstrap b = new Bootstrap();
@@ -31,15 +31,7 @@ public class Network {
                                 channel = socketChannel;
                                 socketChannel.pipeline().addLast(new StringDecoder(),
                                         new StringEncoder(),
-                                        new SimpleChannelInboundHandler<String>() {
-                                            @Override
-                                            protected void channelRead0(ChannelHandlerContext channelHandlerContext, String s) {
-                                                log.debug("Get from server: " + s);
-                                                if (onMessageReceivedCallback != null) {
-                                                    onMessageReceivedCallback.callback(s);
-                                                }
-                                            }
-                                        });
+                                        new ClientHandler(onMessageReceivedCallback));
                             }
                         });
                 ChannelFuture future = b.connect(HOST, PORT).sync();
@@ -50,7 +42,9 @@ public class Network {
                 log.debug("Отключение...");
                 workerGroup.shutdownGracefully();
             }
-        }).start();
+        });
+        tNetwork.setDaemon(true);
+        tNetwork.start();
     }
 
     public void sendMsg(String msg) {
