@@ -55,4 +55,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         broadcastMessage("SERVER", clientName + " left the chat.");
         ctx.close();
     }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.debug("Клиент " + clientName + " left the chat.");
+        channels.remove(ctx.channel());
+        broadcastMessage("SERVER", clientName + " left the chat.");
+        ctx.close();
+    }
 }
