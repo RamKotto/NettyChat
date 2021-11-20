@@ -16,7 +16,7 @@ public class Network {
     private static final int PORT = 8189;
 
     public Network() {
-        log.info("Подключение к серверу...");
+        log.debug("Подключение к серверу...");
         new Thread(() -> {
             EventLoopGroup workerGroup = new NioEventLoopGroup();
             try {
@@ -25,7 +25,7 @@ public class Network {
                         .channel(NioSocketChannel.class)
                         .handler(new ChannelInitializer<SocketChannel>() {
                             @Override
-                            protected void initChannel(SocketChannel socketChannel) throws Exception {
+                            protected void initChannel(SocketChannel socketChannel) {
                                 channel = socketChannel;
                                 socketChannel.pipeline().addLast(new StringDecoder(),
                                         new StringEncoder(),
@@ -40,12 +40,11 @@ public class Network {
                 ChannelFuture future = b.connect(HOST, PORT).sync();
                 future.channel().closeFuture().sync();
             } catch (InterruptedException ex) {
-                log.info("Ошибка подключения к серверу...");
+                log.debug("Ошибка подключения к серверу...");
             } finally {
-                log.info("Отключение...");
+                log.debug("Отключение...");
                 workerGroup.shutdownGracefully();
             }
-
         }).start();
     }
 
