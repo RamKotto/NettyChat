@@ -1,25 +1,35 @@
 package com.saraev.netty.chat.server;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
-public class ServerHandler extends ChannelInboundHandlerAdapter {
+public class ServerHandler extends SimpleChannelInboundHandler<String> {
+    private static final List<Channel> channels = new ArrayList<>();
+    private String clientName;
+    private static int newClientIndex = 1;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        log.info("Client was connected...");
+        log.debug("Client was connected..." + ctx);
+        channels.add(ctx.channel());
+        clientName = "Client #" + newClientIndex;
+        newClientIndex++;
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf byteBuf = (ByteBuf) msg;
-        while (byteBuf.readableBytes() > 0) {
-            System.out.print((char) byteBuf.readByte());
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
+        String out = String.format("[%s]: %s\n", clientName, s);
+        log.debug("Received message: " + out);
+        for (Channel channel : channels) {
+            channel.writeAndFlush(out);
         }
-        byteBuf.release();
     }
 
     @Override
