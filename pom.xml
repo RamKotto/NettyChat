@@ -6,7 +6,12 @@
 
     <groupId>com.saraev.netty.chat</groupId>
     <artifactId>NettyChat</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>netty-chat-server</module>
+        <module>netty-chat-client</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
