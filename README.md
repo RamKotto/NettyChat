@@ -1,8 +1,8 @@
 # NettyChat
 
-Instruction:
--Run server
--Run client (as much as you need)
+<h3>Instruction:<h3>
+  <p>-Run server</p>
+ <p>-Run client (as much as you need)</p>
 
-Commands in client:
-/changename <your name>  - changing your name
+<h3>Commands in client:</h3>
+  <p>/changename <your name>  - changing your name</p>
