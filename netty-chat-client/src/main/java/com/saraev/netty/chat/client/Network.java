@@ -12,12 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Network {
     private SocketChannel channel;
-    private Callback onMessageReceivedCallback;
     private static final String HOST = "localhost";
     private static final int PORT = 8189;
 
     public Network(Callback onMessageReceivedCallback) {
-        this.onMessageReceivedCallback = onMessageReceivedCallback;
         log.debug("Подключение к серверу...");
         Thread tNetwork = new Thread(() -> {
             EventLoopGroup workerGroup = new NioEventLoopGroup();
