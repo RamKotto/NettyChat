@@ -51,7 +51,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.debug(cause.getMessage());
         channels.remove(ctx.channel());
-        broadcastMessage("SERVER", "Client " + clientName + " leave the chat.");
+        broadcastMessage("SERVER", clientName + " leave the chat.");
         ctx.close();
     }
 }
